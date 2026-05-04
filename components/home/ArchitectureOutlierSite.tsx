@@ -102,7 +102,7 @@ function Header({ active, home }: { active: 'home' | 'about'; home?: boolean }) 
         indicatorRef.current.style.opacity = String(indicatorOpacity);
         indicatorRef.current.style.visibility = progress > 0.3 ? 'hidden' : 'visible';
       }
-      if (spacerRef.current) spacerRef.current.style.height = `${heroHeight}px`;
+      if (spacerRef.current) spacerRef.current.style.height = `${heroHeight + distance}px`;
     };
 
     let ticking = false;
