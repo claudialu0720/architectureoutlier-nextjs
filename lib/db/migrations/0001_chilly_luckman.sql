@@ -1,0 +1,1 @@
+ALTER TABLE `tokens` ADD `share_image_count` integer DEFAULT 0 NOT NULL;

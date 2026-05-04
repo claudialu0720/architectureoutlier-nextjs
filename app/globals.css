@@ -1,0 +1,440 @@
+:root {
+  --color-bg: #0a0a0a;
+  --color-panel: #111111;
+  --color-text-main: #f0f0f0;
+  --color-text-sub: #888888;
+  --color-border-base: rgba(255, 255, 255, 0.15);
+  --color-border-active: rgba(255, 255, 255, 0.5);
+  --color-accent-bg: rgba(255, 255, 255, 0.03);
+  --color-accent-bg-active: rgba(255, 255, 255, 0.08);
+  --font-mono: 'Courier New', Courier, monospace;
+  --font-sans: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* HUD primitives ported from the original quiz */
+.hud-box {
+  position: relative;
+  background: var(--color-panel);
+  border: 1px solid var(--color-border-base);
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .hud-box {
+    padding: 20px;
+  }
+}
+
+.hud-corners::before,
+.hud-corners::after,
+.hud-corners-bottom::before,
+.hud-corners-bottom::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  width: 12px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hud-corners::before {
+  left: -1px;
+  border-top: 1px solid #fff;
+  background: linear-gradient(#fff, #fff) no-repeat left top / 1px 12px;
+}
+
+.hud-corners::after {
+  right: -1px;
+  border-top: 1px solid #fff;
+  background: linear-gradient(#fff, #fff) no-repeat right top / 1px 12px;
+}
+
+.hud-corners-bottom::before {
+  border-bottom: 1px solid #fff;
+  background-image: linear-gradient(#fff, #fff);
+  background-position: left bottom;
+  background-size: 1px 12px;
+  background-repeat: no-repeat;
+}
+
+.hud-corners-bottom::after {
+  border-bottom: 1px solid #fff;
+  background-image: linear-gradient(#fff, #fff);
+  background-position: right bottom;
+  background-size: 1px 12px;
+  background-repeat: no-repeat;
+}
+
+/* If both top and bottom corners are requested on the same element */
+.hud-corners.hud-corners-bottom::before {
+  background-image: linear-gradient(#fff, #fff), linear-gradient(#fff, #fff);
+  background-position: left top, left bottom;
+}
+
+.hud-corners.hud-corners-bottom::after {
+  background-image: linear-gradient(#fff, #fff), linear-gradient(#fff, #fff);
+  background-position: right top, right bottom;
+}
+
+/* Quiz components */
+.hero h1 {
+  font-size: 48px;
+  font-weight: normal;
+  margin: 20px 0;
+  color: #fff;
+  line-height: 1.2;
+}
+@media (max-width: 600px) {
+  .hero h1 { font-size: 32px; }
+}
+.hero p {
+  color: var(--color-text-sub);
+  margin-bottom: 40px;
+  max-width: 600px;
+}
+
+.btn {
+  font-family: var(--font-mono);
+  padding: 14px 28px;
+  cursor: pointer;
+  border-radius: 0;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--color-text-main);
+  border: none;
+  color: #000;
+}
+.btn-primary:hover { background: #fff; }
+.btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--color-border-base);
+  color: var(--color-text-sub);
+}
+.btn-outline:hover {
+  border-color: var(--color-border-active);
+  color: var(--color-text-main);
+}
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: var(--color-text-sub);
+}
+.progress-line {
+  height: 1px;
+  background: var(--color-border-base);
+  margin-bottom: 40px;
+  position: relative;
+}
+.progress-inner {
+  position: absolute;
+  left: 0; top: 0;
+  height: 100%;
+  background: #fff;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+.q-param {
+  font-size: 12px;
+  color: var(--color-text-sub);
+  margin-bottom: 10px;
+}
+.q-title {
+  font-size: 28px;
+  font-weight: normal;
+  margin: 0 0 30px;
+  color: #fff;
+}
+@media (max-width: 600px) { .q-title { font-size: 22px; } }
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) { .options { grid-template-columns: 1fr; } }
+.option {
+  border: 1px solid var(--color-border-base);
+  background: transparent;
+  padding: 20px;
+  color: var(--color-text-sub);
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.option:hover {
+  border-color: var(--color-border-active);
+  background: var(--color-accent-bg);
+  color: var(--color-text-main);
+}
+.option.selected {
+  border-color: #fff;
+  background: var(--color-accent-bg-active);
+  color: #fff;
+}
+.opt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.opt-checkbox {
+  width: 14px; height: 14px;
+  border: 1px solid var(--color-border-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.option.selected .opt-checkbox { border-color: #fff; }
+.option.selected .opt-checkbox::after {
+  content: '';
+  width: 8px; height: 8px;
+  background: #fff;
+}
+.opt-text { font-size: 15px; }
+.nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+}
+@media (max-width: 768px) { .result-grid { grid-template-columns: 1fr; } }
+.result-main {
+  border-right: 1px solid var(--color-border-base);
+  padding: 40px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+@media (max-width: 768px) {
+  .result-main {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-base);
+    padding: 20px;
+  }
+}
+.result-side { padding: 40px; box-sizing: border-box; min-width: 0; }
+@media (max-width: 768px) { .result-side { padding: 20px; } }
+
+.section-title {
+  font-size: 14px;
+  color: var(--color-text-sub);
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+.archetype-title {
+  font-size: 42px;
+  font-weight: normal;
+  margin: 0 0 16px;
+  color: #fff;
+  line-height: 1.1;
+}
+@media (max-width: 600px) { .archetype-title { font-size: 32px; } }
+.archetype-summary {
+  color: var(--color-text-sub);
+  margin-bottom: 40px;
+  font-size: 15px;
+}
+
+.mini-card {
+  border: 1px solid var(--color-border-base);
+  padding: 20px;
+  margin-bottom: 16px;
+  background: var(--color-accent-bg);
+  box-sizing: border-box;
+}
+.mini-card strong {
+  display: block;
+  font-size: 16px;
+  color: #fff;
+  font-weight: normal;
+  margin-bottom: 8px;
+}
+.mini-card p {
+  margin: 0;
+  color: var(--color-text-sub);
+  font-size: 14px;
+}
+
+.score-list { margin-top: 30px; }
+.score-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 30px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--color-text-sub);
+}
+.score-bar-bg {
+  height: 2px;
+  background: var(--color-border-base);
+  width: 100%;
+  position: relative;
+}
+.score-bar-fill {
+  height: 100%;
+  background: #fff;
+  position: absolute;
+  left: 0; top: 0;
+}
+.score-val { color: #fff; text-align: right; }
+
+.sigil-box {
+  position: relative;
+  background: #000;
+  border: 1px solid var(--color-border-base);
+  padding: 20px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+.sigil-image {
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+  mix-blend-mode: screen;
+}
+
+/* Staged reveal cascade for the result screen. Items start hidden and
+   fade in one at a time as `is-visible` is added. */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  will-change: opacity, transform;
+}
+.reveal-item.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* For elements that mount AFTER the cascade (e.g. email capture).
+   A one-shot keyframe so the fade fires on mount, not on a class
+   toggle (which can be skipped if both classes are set together). */
+@keyframes reveal-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.reveal-on-mount {
+  animation: reveal-fade-in 0.4s ease forwards;
+}
+
+/* Sigil image: starts invisible + heavily blurred. When `is-revealed`
+   is added, opacity comes up first (~1s), then the blur clears
+   (~2s, delayed by 1s). Total ~3s — matches IMAGE_REVEAL_MS. */
+.sigil-image-reveal {
+  opacity: 0;
+  filter: blur(24px);
+  transition: opacity 1s ease, filter 2s ease 1s;
+}
+.sigil-image-reveal.is-revealed {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.result-lock-blur {
+  filter: blur(9px) saturate(0.35);
+  opacity: 0.45;
+  pointer-events: none;
+  user-select: none;
+}
+
+.sigil-image.result-lock-blur {
+  filter: blur(18px) saturate(0.35) !important;
+}
+
+.result-unlock-panel {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  z-index: 4;
+  width: min(460px, calc(100% - 40px));
+  transform: translate(-50%, -50%);
+}
+
+.result-unlock-panel .mini-card {
+  margin: 0;
+  background: rgba(10, 10, 10, 0.92) !important;
+  border-color: rgba(255, 255, 255, 0.36);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+}
+
+@media (max-width: 768px) {
+  .result-unlock-panel {
+    position: sticky;
+    left: auto;
+    top: 16px;
+    width: auto;
+    margin: -4px 20px 20px;
+    transform: none;
+  }
+}
+
+/* Admin layout */
+.admin-shell .hud-box { padding: 24px; }
+@media (max-width: 600px) {
+  .admin-shell .hud-box { padding: 14px; }
+}
+
+.admin-header-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+@media (max-width: 600px) {
+  .admin-header-actions { gap: 8px; }
+  .admin-header-actions .btn {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+}
+
+.admin-tools-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.admin-tools-grid > * { min-width: 0; }
+@media (max-width: 768px) {
+  .admin-tools-grid { grid-template-columns: 1fr; }
+  .admin-tools-grid > :nth-child(1) { order: 2; }
+  .admin-tools-grid > :nth-child(2) { order: 1; }
+}
