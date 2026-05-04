@@ -217,7 +217,7 @@
 
 .subcategory:hover,
 .subcategory:focus-visible {
-  color: #c9a87c;
+  color: var(--ao-accent);
   outline: none;
 }
 
