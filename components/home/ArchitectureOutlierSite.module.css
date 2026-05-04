@@ -148,14 +148,16 @@
 }
 
 .heroSpacer {
-  height: 100vh;
+  height: calc(200vh - var(--ao-navbar-height));
   pointer-events: none;
 }
 
 .gridSection,
 .aboutSection {
-  min-height: 100vh;
-  padding: calc(var(--ao-navbar-height) + 2rem) 2rem 5rem;
+  position: fixed;
+  inset: var(--ao-navbar-height) 0 0 0;
+  overflow-y: auto;
+  padding: 2rem 2rem 5rem;
   background-color: var(--ao-grid);
   background-image:
     linear-gradient(rgba(201, 168, 124, 0.05) 1px, transparent 1px),
