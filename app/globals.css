@@ -400,9 +400,9 @@ body {
   .result-unlock-panel {
     position: sticky;
     left: auto;
-    top: 16px;
+    top: 20px;
     width: auto;
-    margin: -4px 20px 20px;
+    margin: 20px 20px 20px;
     transform: none;
   }
 }
