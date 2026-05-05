@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import type { Question } from '@/lib/quiz/content';
 import { t } from '@/lib/i18n';
 
@@ -25,6 +26,10 @@ export function QuestionScreen({
   const progress = Math.round((current / total) * 100);
   const selected = answers[current];
   const isLast = current === total - 1;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [current]);
 
   return (
     <section className="hud-box hud-corners hud-corners-bottom">

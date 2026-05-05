@@ -128,7 +128,7 @@ export function QuizApp({
       const nextIdx = current + 1;
       setCurrent(nextIdx);
       saveProgress(tokenId, { current: nextIdx, answers });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo(0, 0);
       return;
     }
     await submit();
@@ -160,7 +160,7 @@ export function QuizApp({
       clearProgress(tokenId);
       setAnalysisDurationMs(3000 + Math.floor(Math.random() * 1001));
       setStage('revealing');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo(0, 0);
     } catch (err) {
       setErrorMsg('network_error');
       setStage('error');
@@ -172,7 +172,7 @@ export function QuizApp({
       const idx = current - 1;
       setCurrent(idx);
       saveProgress(tokenId, { current: idx, answers });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo(0, 0);
     }
   }
 

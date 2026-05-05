@@ -119,6 +119,19 @@ export function ResultScreen({
       className="hud-box hud-corners hud-corners-bottom"
       style={{ padding: 0 }}
     >
+      {resultLocked && tokenId && (
+        <div className="result-unlock-panel">
+          <EmailCapture
+            tokenId={tokenId}
+            initialEmail={initialEmail}
+            onSuccess={() => setEmailUnlocked(true)}
+            title={t.email.unlockTitle}
+            sentPrefix={t.email.unlockedPrefix}
+            sendLabel={t.email.unlockSend}
+          />
+        </div>
+      )}
+
       <div className="result-grid">
         <div className="result-main">
           <div className="mono section-title">{t.result.archetypeProfile}</div>
@@ -260,19 +273,6 @@ export function ResultScreen({
           </div>
         </div>
       </div>
-
-      {resultLocked && tokenId && (
-        <div className="result-unlock-panel">
-          <EmailCapture
-            tokenId={tokenId}
-            initialEmail={initialEmail}
-            onSuccess={() => setEmailUnlocked(true)}
-            title={t.email.unlockTitle}
-            sentPrefix={t.email.unlockedPrefix}
-            sendLabel={t.email.unlockSend}
-          />
-        </div>
-      )}
 
       {onRestart && (
         <div
