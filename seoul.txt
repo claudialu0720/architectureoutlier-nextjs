@@ -1,0 +1,6 @@
+ssh -i $currentIdentity = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+
+icacls $keyPath /inheritance:r
+icacls $keyPath /remove:g "*S-1-1-0" "*S-1-5-11" "*S-1-5-32-545"
+icacls $keyPath /grant:r "${currentIdentity}:(R)"
+icacls $keyPathSeoulServer1Key.pem ubuntu@54.116.241.93
